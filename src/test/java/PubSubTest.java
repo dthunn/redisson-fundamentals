@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.Test;
 import org.redisson.api.RPatternTopicReactive;
 import org.redisson.api.RTopicReactive;
-import org.redisson.api.listener.PatternMessageListener;
 import org.redisson.client.codec.StringCodec;
 
 public class PubSubTest extends BaseTest {
@@ -19,12 +18,7 @@ public class PubSubTest extends BaseTest {
     @Test
     public void subscriber2(){
         RPatternTopicReactive patternTopic = this.client.getPatternTopic("slack-room*", StringCodec.INSTANCE);
-        patternTopic.addListener(String.class, new PatternMessageListener<String>() {
-            @Override
-            public void onMessage(CharSequence pattern, CharSequence topic, String msg) {
-                System.out.println(pattern + " : " + topic + " : " + msg);
-            }
-        }).subscribe();
+        patternTopic.addListener(String.class, (pattern, topic, msg) -> System.out.println(pattern + " : " + topic + " : " + msg)).subscribe();
         sleep(600_000);
     }
 }
